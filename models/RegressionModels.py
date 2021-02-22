@@ -44,9 +44,9 @@ class GradientDecent:
 
     @staticmethod
     def fit(x, y, learning_rate, epochs):
-        theta = np.zeros(x.shape[1])
+        theta = np.zeros(x.shape[1] + 1)
         ones = np.ones(x.shape[0])
-        x = np.concatenate((np.asarray(x), ones))
+        x = np.hstack((np.asarray(x), ones.reshape(-1, 1)))
         cost_ = []
 
         for i in range(epochs):
@@ -68,7 +68,7 @@ class GradientDecent:
         :return: predicted y values
         """
         ones = np.ones((x.shape[0], 1))
-        x = np.concatenate((np.asarray(x), ones))
+        x = np.hstack((np.asarray(x), ones.reshape(-1, 1)))
         predict_y = np.dot(x, theta)
         return predict_y
 
