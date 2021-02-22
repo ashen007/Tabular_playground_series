@@ -39,7 +39,7 @@ class OLS:
 class GradientDecent:
     @staticmethod
     def cost_function(x, y, theta):
-        cost = np.sum((np.dot(x, theta) - y) ** 2)/len(y)
+        cost = np.sum((np.dot(x, theta) - y) ** 2) / 2 * len(y)
         return cost
 
     @staticmethod
@@ -52,7 +52,7 @@ class GradientDecent:
         for i in range(epochs):
             hypothesis = np.dot(x, theta)
             loss = hypothesis - y
-            gradient = 2 * np.dot(x.T, loss)/len(y)
+            gradient = np.dot(x.T, loss) / len(y)
             theta = theta - gradient * learning_rate
             cost = GradientDecent.cost_function(x, y, theta)
             cost_.append(cost)
