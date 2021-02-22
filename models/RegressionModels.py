@@ -10,7 +10,7 @@ class OLS:
         :param y: predicting feature
         :return: coefficients and intercept
         """
-        theta, intercept = np.linalg.lstsq(x, y, rcond=None)[0]
+        theta, intercept = np.linalg.lstsq(x, y, rcond=None)[:2]
         return theta, intercept
 
     @staticmethod
@@ -39,22 +39,22 @@ class OLS:
 class GradientDecent:
     @staticmethod
     def cost_function(x, y, theta):
-        cost = np.sum((np.dot(x, theta) - y) ** 2)
+        cost = np.sum((np.dot(x, theta) - y) ** 2)/len(y)
         return cost
 
     @staticmethod
     def fit(x, y, learning_rate, epochs):
         theta = np.zeros(x.shape[1])
-        ones = np.ones((x.shape[0], 1))
+        ones = np.ones(x.shape[0])
         x = np.concatenate((np.asarray(x), ones))
         cost_ = []
 
         for i in range(epochs):
             hypothesis = np.dot(x, theta)
             loss = hypothesis - y
-            gradient = 2 * np.dot(x.T, loss)
+            gradient = 2 * np.dot(x.T, loss)/len(y)
             theta = theta - gradient * learning_rate
-            cost = GradientDecent.cost_function(x,y,theta)
+            cost = GradientDecent.cost_function(x, y, theta)
             cost_.append(cost)
 
         return theta, cost_
