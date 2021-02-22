@@ -58,3 +58,27 @@ class GradientDecent:
             cost_.append(cost)
 
         return theta, cost_
+
+    @staticmethod
+    def prediction(x, theta):
+        """
+        :param x: predicts
+        :param theta: coefficients
+        :param intercept: intercept
+        :return: predicted y values
+        """
+        ones = np.ones((x.shape[0], 1))
+        x = np.concatenate((np.asarray(x), ones))
+        predict_y = np.dot(x, theta)
+        return predict_y
+
+    @staticmethod
+    def score(y_true, y_predict):
+        """
+        :param y_true: real target feature values
+        :param y_predict: model predicted target values
+        :return: square error and mean square error
+        """
+        r2Score = r2_score(y_true, y_predict)
+        mse = mean_squared_error(y_true, y_predict)
+        return r2Score, mse
