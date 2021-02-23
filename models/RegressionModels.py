@@ -131,3 +131,57 @@ class RidgeRegression:
         r2Score = r2_score(y_true, y_predict)
         mse = mean_squared_error(y_true, y_predict)
         return r2Score, mse
+
+
+class LassoRegression:
+    def __init__(self, alpha):
+        self.alpha = alpha
+
+    def cost_function(self, x, y, theta):
+        cost = (np.sum((np.dot(x, theta) - y) ** 2) + self.alpha * np.sum(np.abs(theta))) / 2 * len(y)
+        return cost
+
+    def fit(self, x, y, learning_rate, epochs):
+        theta = np.zeros(x.shape[1])
+        x = np.asarray(x)
+        cost_ = []
+
+        for i in range(epochs):
+            hypothesis = np.dot(x, theta)
+            loss = hypothesis - y
+            gradient = np.zeros(x.shape[1])
+
+            for j in range(len(theta)):
+                if j > 0:
+                    gradient = (2 * np.dot(x[:, j].T, loss) + self.alpha) / 2 * len(y)
+                else:
+                    gradient = (2 * np.dot(x[:, j].T, loss) - self.alpha) / 2 * len(y)
+
+            theta = theta - gradient * learning_rate
+            cost = self.cost_function(x, y, theta)
+            cost_.append(cost)
+
+        return theta, cost_
+
+    @staticmethod
+    def prediction(x, theta):
+        """
+        :param x: predicts
+        :param theta: coefficients
+        :param intercept: intercept
+        :return: predicted y values
+        """
+        x = np.asarray(x)
+        predict_y = np.dot(x, theta)
+        return predict_y
+
+    @staticmethod
+    def score(y_true, y_predict):
+        """
+        :param y_true: real target feature values
+        :param y_predict: model predicted target values
+        :return: square error and mean square error
+        """
+        r2Score = r2_score(y_true, y_predict)
+        mse = mean_squared_error(y_true, y_predict)
+        return r2Score, mse
