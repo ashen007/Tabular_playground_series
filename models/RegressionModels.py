@@ -10,6 +10,8 @@ class OLS:
         :param y: predicting feature
         :return: coefficients and intercept
         """
+        ones = np.ones(x.shape[0])
+        x = np.hstack((np.asarray(x), ones.reshape(-1, 1)))
         theta, intercept = np.linalg.lstsq(x, y, rcond=None)[:2]
         return theta, intercept
 
@@ -21,6 +23,8 @@ class OLS:
         :param intercept: intercept
         :return: predicted y values
         """
+        ones = np.ones(x.shape[0])
+        x = np.hstack((np.asarray(x), ones.reshape(-1, 1)))
         predict_y = np.dot(x, theta) + intercept
         return predict_y
 
@@ -142,8 +146,9 @@ class LassoRegression:
         return cost
 
     def fit(self, x, y, learning_rate, epochs):
-        theta = np.zeros(x.shape[1])
-        x = np.asarray(x)
+        theta = np.zeros(x.shape[1] + 1)
+        ones = np.ones(x.shape[0])
+        x = np.hstack((np.asarray(x), ones.reshape(-1, 1)))
         cost_ = []
 
         for i in range(epochs):
@@ -151,11 +156,11 @@ class LassoRegression:
             loss = hypothesis - y
             gradient = np.zeros(x.shape[1])
 
-            for j in range(len(theta)):
-                if j > 0:
-                    gradient = (2 * np.dot(x[:, j].T, loss) + self.alpha) / 2 * len(y)
+            for j in range(x.shape[1]):
+                if theta[j] > 0:
+                    gradient[j] = (np.dot(x[:, j].T, loss) + self.alpha / 2) / len(y)
                 else:
-                    gradient = (2 * np.dot(x[:, j].T, loss) - self.alpha) / 2 * len(y)
+                    gradient[j] = (np.dot(x[:, j].T, loss) - self.alpha / 2) / len(y)
 
             theta = theta - gradient * learning_rate
             cost = self.cost_function(x, y, theta)
@@ -171,7 +176,8 @@ class LassoRegression:
         :param intercept: intercept
         :return: predicted y values
         """
-        x = np.asarray(x)
+        ones = np.ones((x.shape[0], 1))
+        x = np.hstack((np.asarray(x), ones.reshape(-1, 1)))
         predict_y = np.dot(x, theta)
         return predict_y
 
