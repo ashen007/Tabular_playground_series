@@ -92,8 +92,7 @@ class RidgeRegression:
         cost = (np.sum((np.dot(x, theta) - y) ** 2) + self.alpha * np.sum(theta ** 2)) / 2 * len(y)
         return cost
 
-    @staticmethod
-    def fit(x, y, learning_rate, epochs):
+    def fit(self, x, y, learning_rate, epochs):
         theta = np.zeros(x.shape[1] + 1)
         ones = np.ones(x.shape[0])
         x = np.hstack((np.asarray(x), ones.reshape(-1, 1)))
@@ -102,9 +101,9 @@ class RidgeRegression:
         for i in range(epochs):
             hypothesis = np.dot(x, theta)
             loss = hypothesis - y
-            gradient = np.dot(x.T, loss) / len(y)
+            gradient = (np.dot(x.T, loss) + self.alpha * theta) / len(y)
             theta = theta - gradient * learning_rate
-            cost = RidgeRegression.cost_function(x, y, theta)
+            cost = self.cost_function(x, y, theta)
             cost_.append(cost)
 
         return theta, cost_
