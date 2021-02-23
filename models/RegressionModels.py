@@ -12,8 +12,8 @@ class OLS:
         """
         ones = np.ones(x.shape[0])
         x = np.hstack((np.asarray(x), ones.reshape(-1, 1)))
-        theta, intercept = np.linalg.lstsq(x, y, rcond=None)[:2]
-        return theta, intercept
+        theta = np.linalg.lstsq(x, y, rcond=None)[0]
+        return theta
 
     @staticmethod
     def prediction(x, theta, intercept):
@@ -25,7 +25,7 @@ class OLS:
         """
         ones = np.ones(x.shape[0])
         x = np.hstack((np.asarray(x), ones.reshape(-1, 1)))
-        predict_y = np.dot(x, theta) + intercept
+        predict_y = np.dot(x, theta)
         return predict_y
 
     @staticmethod
