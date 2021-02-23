@@ -2,19 +2,7 @@ import numpy as np
 from sklearn.metrics import r2_score, mean_squared_error
 
 
-class OLS:
-    @staticmethod
-    def fit(x, y):
-        """
-        :param x: predicts features
-        :param y: predicting feature
-        :return: coefficients and intercept
-        """
-        ones = np.ones(x.shape[0])
-        x = np.hstack((np.asarray(x), ones.reshape(-1, 1)))
-        theta = np.linalg.lstsq(x, y, rcond=None)[0]
-        return theta
-
+class Evaluate:
     @staticmethod
     def prediction(x, theta, intercept):
         """
@@ -40,7 +28,21 @@ class OLS:
         return r2Score, mse
 
 
-class GradientDecent:
+class OLS(Evaluate):
+    @staticmethod
+    def fit(x, y):
+        """
+        :param x: predicts features
+        :param y: predicting feature
+        :return: coefficients and intercept
+        """
+        ones = np.ones(x.shape[0])
+        x = np.hstack((np.asarray(x), ones.reshape(-1, 1)))
+        theta = np.linalg.lstsq(x, y, rcond=None)[0]
+        return theta
+
+
+class GradientDecent(Evaluate):
     @staticmethod
     def cost_function(x, y, theta):
         cost = np.sum((np.dot(x, theta) - y) ** 2) / 2 * len(y)
@@ -63,32 +65,8 @@ class GradientDecent:
 
         return theta, cost_
 
-    @staticmethod
-    def prediction(x, theta):
-        """
-        :param x: predicts
-        :param theta: coefficients
-        :param intercept: intercept
-        :return: predicted y values
-        """
-        ones = np.ones((x.shape[0], 1))
-        x = np.hstack((np.asarray(x), ones.reshape(-1, 1)))
-        predict_y = np.dot(x, theta)
-        return predict_y
 
-    @staticmethod
-    def score(y_true, y_predict):
-        """
-        :param y_true: real target feature values
-        :param y_predict: model predicted target values
-        :return: square error and mean square error
-        """
-        r2Score = r2_score(y_true, y_predict)
-        mse = mean_squared_error(y_true, y_predict)
-        return r2Score, mse
-
-
-class RidgeRegression:
+class RidgeRegression(Evaluate):
     def __init__(self, alpha):
         self.alpha = alpha
 
@@ -112,32 +90,8 @@ class RidgeRegression:
 
         return theta, cost_
 
-    @staticmethod
-    def prediction(x, theta):
-        """
-        :param x: predicts
-        :param theta: coefficients
-        :param intercept: intercept
-        :return: predicted y values
-        """
-        ones = np.ones((x.shape[0], 1))
-        x = np.hstack((np.asarray(x), ones.reshape(-1, 1)))
-        predict_y = np.dot(x, theta)
-        return predict_y
 
-    @staticmethod
-    def score(y_true, y_predict):
-        """
-        :param y_true: real target feature values
-        :param y_predict: model predicted target values
-        :return: square error and mean square error
-        """
-        r2Score = r2_score(y_true, y_predict)
-        mse = mean_squared_error(y_true, y_predict)
-        return r2Score, mse
-
-
-class LassoRegression:
+class LassoRegression(Evaluate):
     def __init__(self, alpha):
         self.alpha = alpha
 
@@ -167,27 +121,3 @@ class LassoRegression:
             cost_.append(cost)
 
         return theta, cost_
-
-    @staticmethod
-    def prediction(x, theta):
-        """
-        :param x: predicts
-        :param theta: coefficients
-        :param intercept: intercept
-        :return: predicted y values
-        """
-        ones = np.ones((x.shape[0], 1))
-        x = np.hstack((np.asarray(x), ones.reshape(-1, 1)))
-        predict_y = np.dot(x, theta)
-        return predict_y
-
-    @staticmethod
-    def score(y_true, y_predict):
-        """
-        :param y_true: real target feature values
-        :param y_predict: model predicted target values
-        :return: square error and mean square error
-        """
-        r2Score = r2_score(y_true, y_predict)
-        mse = mean_squared_error(y_true, y_predict)
-        return r2Score, mse
